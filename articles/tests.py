@@ -1,6 +1,7 @@
 from django.test import TestCase, TransactionTestCase
 from django.db import connection
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from django.db.migrations.executor import MigrationExecutor
 from django.db.migrations.state import ProjectState
 from django.core.management import call_command
@@ -147,3 +148,29 @@ class ArticleModelTest(TestCase):
         articles = Article.objects.all()
         self.assertEqual(articles[0], article2)
         self.assertEqual(articles[1], article1)
+
+
+class ArticleDeleteViewTest(TestCase):
+
+    def setUp(self):
+        self.author = User.objects.create_user(username='author', email='author@example.com')
+        self.other_user = User.objects.create_user(username='reader', email='reader@example.com')
+        self.article = Article.objects.create(
+            title='記事',
+            content='内容',
+            author=self.author
+        )
+
+    def test_non_author_is_redirected_from_delete_view(self):
+        self.client.force_login(self.other_user)
+
+        response = self.client.get(reverse('articles:delete', args=[self.article.pk]))
+
+        self.assertRedirects(response, '/for_reinhardt', fetch_redirect_response=False)
+
+    def test_author_can_access_delete_view(self):
+        self.client.force_login(self.author)
+
+        response = self.client.get(reverse('articles:delete', args=[self.article.pk]))
+
+        self.assertEqual(response.status_code, 200)

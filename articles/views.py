@@ -1,5 +1,5 @@
-from django.views.generic import ListView, CreateView, DetailView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from .models import Article
@@ -76,3 +76,20 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('articles:detail', kwargs={'pk': self.object.pk})
+
+
+class ArticleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Article
+    template_name = 'articles/delete.html'
+    context_object_name = 'article'
+    success_url = reverse_lazy('articles:list')
+
+    def test_func(self):
+        article = self.get_object()
+        user = self.request.user
+        return user.is_staff or user.is_superuser or article.author == user
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return redirect('/for_reinhardt')
+        return super().handle_no_permission()
