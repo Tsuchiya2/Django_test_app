@@ -11,6 +11,9 @@ class ArticleListView(ListView):
     template_name = 'articles/list.html'
     context_object_name = 'articles'
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('author')
+
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
@@ -40,6 +43,9 @@ class ArticleDetailView(DetailView):
     template_name = 'articles/detail.html'
     context_object_name = 'article'
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('author')
+
 
 class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     model = Article
@@ -47,11 +53,14 @@ class ArticleUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'articles/edit.html'
     context_object_name = 'article'
 
-    def dispatch(self, request, *args, **kwargs):
-        article = self.get_object()
-        if request.user != article.author:
-            return redirect('/')
-        return super().dispatch(request, *args, **kwargs)
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return qs
+        return qs.filter(author=self.request.user)
+
+    def handle_no_permission(self):
+        return redirect('/for_reinhardt')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
