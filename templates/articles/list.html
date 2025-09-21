@@ -4,10 +4,18 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <div class="mb-8">
+    <div class="mb-8 flex items-center justify-between">
         <h1 class="text-3xl font-bold text-gray-900 mb-2">記事一覧</h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'articles:create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                <svg class="mr-2 -ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                記事を投稿する
+            </a>
+        {% endif %}
     </div>
-
+<!-- 省略 -->
     {% if articles %}
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="divide-y divide-gray-200">
@@ -63,7 +71,7 @@
                 <p class="mt-2 text-gray-500">まだ記事が投稿されていません。最初の記事を投稿してみませんか？</p>
                 {% if user.is_authenticated %}
                     <div class="mt-6">
-                        <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <a href="{% url 'articles:create' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             記事を投稿する
                         </a>
                     </div>
