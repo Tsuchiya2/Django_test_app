@@ -19,8 +19,11 @@
                     </h1>
                 </div>
 
-                <!-- Auth Section (Desktop) -->
+                <!-- Navigation and Auth Section (Desktop) -->
                 <div class="hidden md:flex items-center space-x-4">
+                    <a href="{% url 'articles:list' %}" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
+                        記事一覧
+                    </a>
                     {% if user.is_authenticated %}
                         <span class="text-sm text-white">こんにちは、{{ user.username }}さん</span>
                         <form method="post" action="{% url 'accounts:logout' %}" class="inline">
@@ -52,6 +55,9 @@
             <!-- Mobile menu -->
             <div class="md:hidden hidden" id="mobile-menu">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="{% url 'articles:list' %}" class="text-white hover:text-gray-300 block px-3 py-2 rounded-md text-base font-medium">
+                        記事一覧
+                    </a>
                     {% if user.is_authenticated %}
                         <span class="text-white block px-3 py-2">こんにちは、{{ user.username }}さん</span>
                         <form method="post" action="{% url 'accounts:logout' %}" class="block">
