@@ -15,7 +15,7 @@
             </a>
         {% endif %}
     </div>
-<!-- 省略 -->
+
     {% if articles %}
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="divide-y divide-gray-200">
@@ -71,7 +71,7 @@
                 <p class="mt-2 text-gray-500">まだ記事が投稿されていません。最初の記事を投稿してみませんか？</p>
                 {% if user.is_authenticated %}
                     <div class="mt-6">
-                        <a href="{% url 'articles:create' %}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             記事を投稿する
                         </a>
                     </div>

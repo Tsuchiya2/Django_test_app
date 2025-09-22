@@ -1,5 +1,4 @@
-# tribute/views.py
-from django.shortcuts import render
+from django.shortcuts import render # 変更
 
 def for_reinhardt(request):
-    return render(request, "tribute/for_reinhardt.html")  # ← これでOK
+    return render(request, 'tribute/for_reinhardt.html') # 変更
