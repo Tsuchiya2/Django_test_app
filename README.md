@@ -1,3 +1,56 @@
+# Jazz Guitarist Paper
+
+Containerised Django environment that now configures itself so you can just run `docker compose up` on macOS, Linux, and Windows (including WSL2) without chasing permission issues.
+
+## Quick Start
+
+1. Install Docker (Desktop or Engine) and ensure the `docker compose` plugin is available.
+2. Clone the repository and change into the project directory:
+   ```bash
+   git clone https://github.com/<your-account>/jazz_guitarist_paper.git
+   cd jazz_guitarist_paper
+   ```
+3. Run the development stack:
+   ```bash
+   docker compose up --build
+   ```
+4. Open <http://localhost:8000> to access the Django development server.
+
+The first run installs dependencies, auto-detects the UID/GID of the mounted project files, creates a matching user inside the container, and starts the server. Subsequent runs reuse the built image and existing SQLite database file.
+
+## How permission auto-detection works
+
+- `entrypoint.sh` inspects the owner of the mounted project directory (and SQLite file, if it already exists).
+- When the detected UID/GID differ from the defaults, the entrypoint recreates the container user and group to match them before launching Django via `gosu`.
+- If the mount is owned by `root`, the container runs as `root`. No manual environment variables are needed, which keeps WSL2, macOS, and Linux setups aligned.
+
+## Customisation (optional)
+
+The `.env` file contains sensible defaults:
+
+```
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+```
+
+You can override these values by editing `.env` or passing variables on the command line (e.g. `DEBUG=False docker compose up`). Uncomment the `APP_UID` and `APP_GID` entries in `.env` only if you want to bypass auto-detection.
+
+## Common workflow
+
+- `docker compose up` – start the dev server (add `-d` to run detached).
+- `docker compose run --rm web python manage.py migrate` – apply migrations when your models change.
+- `docker compose run --rm web python manage.py createsuperuser` – create an admin account.
+
+Stop the stack with `Ctrl+C` or `docker compose down`. Use `docker compose down -v` if you also want to delete the SQLite volume.
+
+## Troubleshooting
+
+- **File permissions still look wrong:** delete any existing containers with `docker compose down`, ensure the repo is mounted from your local filesystem (not a network share), and start again.
+- **Port 8000 already in use:** either stop the conflicting service or override the port binding with `PORT=9000 docker compose up` and update the mapping in `docker-compose.yml`.
+
+## Appendix: Original study notes
+
+The original README content that discussed Django query optimisation has been preserved below for reference.
 
 ⏺ 初学者向けに分かりやすく説明しますね！
 
