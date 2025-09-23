@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}記事を削除する - Jazz Guitarist Paper{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="p-6 space-y-4">
+            <h1 class="text-2xl font-bold text-gray-900">記事を削除する</h1>
+            <p class="text-gray-600">以下の記事を本当に削除しますか？ この操作は元に戻せません。</p>
+            <div class="bg-gray-50 border border-gray-200 rounded-md p-4">
+                <h2 class="text-lg font-semibold text-gray-800">{{ article.title }}</h2>
+                <p class="mt-2 text-sm text-gray-600">{{ article.content|truncatechars:180 }}</p>
+            </div>
+        </div>
+        <form method="post" class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3">
+            {% csrf_token %}
+            <a href="{% url 'articles:detail' article.pk %}" class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">キャンセル</a>
+            <button type="submit" class="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">削除する</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
