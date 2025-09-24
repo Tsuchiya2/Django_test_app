@@ -1,12 +1,31 @@
 services:
+  db:
+    image: postgres:16
+    container_name: jazz_guitarist_paper_db
+    environment:
+      POSTGRES_DB: jazz_guitarist_paper_db
+      POSTGRES_USER: world_company
+      POSTGRES_PASSWORD: djan2005go
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
   web:
     build: .
+    container_name: jazz_guitarist_paper_web
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-      - ./db.sqlite3:/app/db.sqlite3
     environment:
       DEBUG: "${DEBUG:-True}"
       ALLOWED_HOSTS: "${ALLOWED_HOSTS:-localhost,127.0.0.1,0.0.0.0}"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

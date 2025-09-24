@@ -19,7 +19,7 @@ WORKDIR /app
 
 # Install system dependencies (if needed for builds)
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends build-essential bash gosu \
+    && apt-get install -y --no-install-recommends build-essential bash gosu libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Create application user and group with configurable UID/GID defaults

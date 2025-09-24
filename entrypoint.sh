@@ -7,7 +7,6 @@ APP_UID=${APP_UID:-}
 APP_GID=${APP_GID:-}
 APP_HOME=${APP_HOME:-/home/${APP_USER}}
 APP_PATH=${APP_PATH:-/app}
-SQLITE_PATH=${SQLITE_PATH:-${APP_PATH}/db.sqlite3}
 
 DEFAULT_UID=1000
 DEFAULT_GID=1000
@@ -55,9 +54,6 @@ maybe_detect_uid_gid() {
 }
 
 maybe_detect_uid_gid "$APP_PATH"
-if [ -z "$APP_UID" ] || [ -z "$APP_GID" ]; then
-    maybe_detect_uid_gid "$SQLITE_PATH"
-fi
 
 APP_UID=${APP_UID:-$DEFAULT_UID}
 APP_GID=${APP_GID:-$DEFAULT_GID}
@@ -96,21 +92,11 @@ if [ "$(id -u)" -eq 0 ]; then
     mkdir -p "$APP_PATH"
     chown -R "$APP_UID:$APP_GID" "$APP_PATH" 2>/dev/null || true
 
-    if [ ! -e "$SQLITE_PATH" ]; then
-        touch "$SQLITE_PATH"
-    fi
-    chown "$APP_UID:$APP_GID" "$SQLITE_PATH" 2>/dev/null || true
-    chmod 664 "$SQLITE_PATH" 2>/dev/null || true
-
     if [ "$APP_UID" = "0" ]; then
         exec "$@"
     else
         exec gosu "$APP_USER" "$@"
     fi
 else
-    if [ ! -e "$SQLITE_PATH" ]; then
-        touch "$SQLITE_PATH"
-    fi
-    chmod 664 "$SQLITE_PATH" 2>/dev/null || true
     exec "$@"
 fi

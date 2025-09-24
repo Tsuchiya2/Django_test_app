@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'jazz_guitarist_paper.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jazz_guitarist_paper_db',
+        'USER': 'world_company',
+        'PASSWORD': 'djan2005go',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
